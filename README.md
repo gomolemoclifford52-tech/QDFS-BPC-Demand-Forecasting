@@ -29,16 +29,19 @@ The project uses quarterly electricity distribution figures as a **proxy for dem
 
 ## Application screenshots
 
-Add screenshots of the running app to the repository's `screenshots/` folder with the filenames below. Once uploaded, the images will appear here.
+## 📸 Application Screenshots
 
-| Dashboard | Forecast results |
-|---|---|
-| `screenshots/dashboard.png` | `screenshots/forecast-results.png` |
+### Dashboard
+![QDFS Dashboard](screenshots/dashboard.png)
 
-| Accuracy analysis | Parameter testing |
-|---|---|
-| `screenshots/accuracy-analysis.png` | `screenshots/parameter-testing.png` |
+### Forecast Results
+![Forecast Results](screenshots/forecast-results.png)
 
+### Accuracy Analysis
+![Accuracy Analysis](screenshots/accuracy-analysis.png)
+
+### Parameter Testing
+![Parameter Testing](screenshots/parameter-testing.png)
 ## Project objectives
 
 1. Generate quarterly forecasts using Moving Average and Exponential Smoothing.

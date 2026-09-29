@@ -56,17 +56,17 @@ The project uses quarterly electricity distribution figures as a **proxy for dem
 
 For a moving-average window of `n` observations:
 
-\[
+$$
 MA_t = \frac{A_{t-1} + A_{t-2} + \cdots + A_{t-n}}{n}
-\]
+$$
 
 The default window is **4 quarters**.
 
 ### 2. Exponential Smoothing
 
-\[
+$$
 F_t = \alpha A_{t-1} + (1-\alpha)F_{t-1}
-\]
+$$
 
 The default smoothing constant is **α = 0.4**. The initial forecast is set to the first actual observation.
 
@@ -180,9 +180,9 @@ The `screenshots/` images are presentation assets. Add them to the repository to
 
 Where displayed, the application may show a simple range calculated as:
 
-\[
+$$
 \text{Forecast} \pm MAD
-\]
+$$
 
 This is an **error-based range**, not a statistical confidence interval or prediction interval.
 

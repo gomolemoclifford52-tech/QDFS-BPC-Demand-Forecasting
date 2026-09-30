@@ -549,12 +549,13 @@ with st.sidebar:
 # 8. TABS
 # ============================================================
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "📊 Dashboard",
     "📈 Forecast Results",
     "🎯 Accuracy Analysis",
     "⚙️ Parameter Testing",
-    "💾 Data & Downloads"
+    "💾 Data & Downloads",
+    "📝 Forecast Report"
 ])
 
 
@@ -1664,7 +1665,132 @@ with tab5:
 
 
 # ============================================================
-# 15. ABOUT QDFS AND PROJECT METHODOLOGY
+# 15. TAB 6 — AUTOMATED FORECASTING REPORT
+# ============================================================
+
+with tab6:
+
+    st.markdown(
+        '<div class="section-title">📝 Automated Forecasting Report</div>',
+        unsafe_allow_html=True
+    )
+
+    if not forecast_available:
+
+        st.info("Run the forecast to generate the automated report.")
+
+    else:
+
+        # Compare historical accuracy on each model's current evaluation
+        # window. This is a descriptive comparison, not a guarantee
+        # of future performance.
+        if ma_mape < es_mape:
+            lower_mape_model = f"{ma_window}-Quarter Moving Average"
+            mape_comparison = (
+                f"The Moving Average has the lower historical MAPE "
+                f"({ma_mape:.2f}% versus {es_mape:.2f}% for Exponential "
+                f"Smoothing) under the current settings."
+            )
+        elif es_mape < ma_mape:
+            lower_mape_model = "Exponential Smoothing"
+            mape_comparison = (
+                f"Exponential Smoothing has the lower historical MAPE "
+                f"({es_mape:.2f}% versus {ma_mape:.2f}% for the "
+                f"Moving Average) under the current settings."
+            )
+        else:
+            lower_mape_model = "Neither model (equal MAPE)"
+            mape_comparison = (
+                "Both models have the same historical MAPE under the "
+                "current settings."
+            )
+
+        st.subheader("Executive Summary")
+
+        st.write(
+            f"Using **{len(df)} quarterly observations** from "
+            f"**{df['Quarter'].iloc[0]} to {df['Quarter'].iloc[-1]}**, "
+            f"QDFS forecasts electricity distribution for **{next_quarter}**. "
+            f"The selected Moving Average window is **{ma_window} quarters** "
+            f"and the Exponential Smoothing parameter is **α = {alpha:.1f}**."
+        )
+
+        c1, c2 = st.columns(2)
+
+        with c1:
+            st.metric(
+                f"Moving Average — {next_quarter}",
+                f"{next_ma_forecast:,.0f} MWh"
+            )
+            st.caption(
+                f"MAD: {ma_mad:,.2f} MWh | MAPE: {ma_mape:.2f}%"
+            )
+
+        with c2:
+            st.metric(
+                f"Exponential Smoothing — {next_quarter}",
+                f"{next_es_forecast:,.0f} MWh"
+            )
+            st.caption(
+                f"MAD: {es_mad:,.2f} MWh | MAPE: {es_mape:.2f}%"
+            )
+
+        st.subheader("Historical Accuracy Comparison")
+        st.write(mape_comparison)
+        st.caption(
+            "This comparison describes the historical evaluation results "
+            "for the current dataset and settings. It does not establish "
+            "which model will be more accurate in future quarters."
+        )
+
+        report_text = f"""# QDFS Automated Forecasting Report
+
+## Dataset and configuration
+- Data source: {data_source}
+- Observations: {len(df)}
+- Historical period: {df['Quarter'].iloc[0]} to {df['Quarter'].iloc[-1]}
+- Forecast period: {next_quarter}
+- Moving Average window: {ma_window} quarters
+- Exponential Smoothing alpha: {alpha:.1f}
+
+## Next-quarter forecasts
+
+| Model | Forecast (MWh) | MAD (MWh) | MAPE (%) | Forecast ± MAD range (MWh) |
+|---|---:|---:|---:|---:|
+| {ma_window}-Quarter Moving Average | {next_ma_forecast:.2f} | {ma_mad:.2f} | {ma_mape:.2f} | {ma_lower:.2f} – {ma_upper:.2f} |
+| Exponential Smoothing | {next_es_forecast:.2f} | {es_mad:.2f} | {es_mape:.2f} | {es_lower:.2f} – {es_upper:.2f} |
+
+## Interpretation
+{mape_comparison}
+
+MAD is the mean absolute forecast error in MWh. MAPE is the mean absolute
+percentage error. Lower values indicate smaller errors on the evaluated
+historical observations, but do not guarantee better future performance.
+
+## Planning considerations
+- Treat these results as decision-support estimates, not exact future demand.
+- The displayed ranges are forecast ± MAD. They are simple error-based
+  ranges, not statistical confidence or prediction intervals.
+- This project uses electricity distribution as a proxy for demand.
+  Supply constraints or load-shedding may cause distribution to differ
+  from underlying electricity demand.
+- Check that uploaded observations are in chronological order and that
+  the data are appropriate for the planning period.
+"""
+        st.subheader("Report Preview")
+        st.markdown(report_text)
+
+        st.download_button(
+            "⬇️ Download Forecasting Report (Markdown)",
+            data=report_text.encode("utf-8"),
+            file_name="QDFS_Automated_Forecasting_Report.md",
+            mime="text/markdown",
+            use_container_width=True
+        )
+
+
+# ============================================================
+# 16. ABOUT QDFS AND PROJECT METHODOLOGY
 # ============================================================
 
 st.divider()
@@ -1732,7 +1858,7 @@ with st.expander("ℹ️ About QDFS & Project Methodology"):
 
 
 # ============================================================
-# 16. FOOTER
+# 17. FOOTER
 # ============================================================
 
 st.divider()

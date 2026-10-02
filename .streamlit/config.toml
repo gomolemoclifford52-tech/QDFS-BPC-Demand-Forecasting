@@ -1,0 +1,14 @@
+[theme]
+base = "light"
+primaryColor = "#EC6A24"
+backgroundColor = "#E6E7E2"
+secondaryBackgroundColor = "#F4F4F0"
+textColor = "#1C201D"
+borderColor = "#D6D8D0"
+font = "Archivo:https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap"
+baseRadius = "12px"
+buttonRadius = "full"
+
+[theme.sidebar]
+backgroundColor = "#F2F2EE"
+secondaryBackgroundColor = "#E9EAE5"
